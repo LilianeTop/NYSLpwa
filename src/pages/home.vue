@@ -6,12 +6,18 @@
         <f7-link icon-ios="f7:menu" icon-aurora="f7:menu" icon-md="material:menu" panel-open="left"></f7-link>
       </f7-nav-left>
       <f7-nav-title sliding>NYSL</f7-nav-title>
-      
+
       <f7-nav-title-large sliding>NYSL</f7-nav-title-large>
       <f7-nav-right>
-        <f7-link icon-ios="f7:contact" icon-aurora="f7:person" icon-md="material:person" fill raised login-screen-open="#login-screen">Log-In</f7-link>
+        <f7-link
+          icon-ios="f7:contact"
+          icon-aurora="f7:person"
+          icon-md="material:person"
+          fill
+          raised
+          login-screen-open="#login-screen"
+        >Log-In</f7-link>
       </f7-nav-right>
-
     </f7-navbar>
 
     <!-- Page content-->
@@ -27,10 +33,10 @@
       <f7-list-item link="/form/" title="Form"></f7-list-item>
     </f7-list>
 
-<div>
-  {{ teams[0].players[0].first_name }}
-</div>
-
+    <!-- <f7-block inset v-for="player in players" :key="player.key">
+      <f7-block-title strong>{{ player.first_name }} {{ player.last_name }}</f7-block-title>
+    </f7-block> -->
+    
     <!-- <f7-block-title>Modals</f7-block-title>
     <f7-block strong>
       <f7-row>
@@ -62,7 +68,7 @@
       ></f7-list-item>
       <f7-list-item title="Default Route (404)" link="/load-something-that-doesnt-exist/"></f7-list-item>
       <f7-list-item title="Request Data & Load" link="/request-and-load/user/123456/"></f7-list-item>
-    </f7-list> -->
+    </f7-list>-->
   </f7-page>
 </template>
 <script>
@@ -75,18 +81,21 @@ require("firebase/database");
 export default {
   data() {
     return {
-      teams: {}
+      players: []
     };
   },
-  mounted() {
+  created() {
     // Your web app's Firebase configuration
 
     const db = firebase.database();
-    db.ref("/teams/")
+    db.ref("/players/")
       .once("value")
       .then(snapshot => {
-        this.teams = snapshot.val();
-        console.log(this.teams)
+        snapshot.forEach(snapshot => {
+          const player = snapshot.val();
+          player.key = snapshot.key;
+          this.players.push(player);
+        });
       });
   }
 };

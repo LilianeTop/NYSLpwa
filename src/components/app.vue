@@ -113,6 +113,7 @@ if (!firebase.apps.length) {
   firebase.initializeApp(firebaseConfig);
 }
 const auth = firebase.auth();
+
 export default {
   data() {
     return {
@@ -126,14 +127,13 @@ export default {
         // Register service worker
         serviceWorker: {
           path: "/service-worker.js"
-        },
-        auth: firebase.auth(),
-        isSignedIn: false
+        }
       },
 
       // Login screen data
       username: "",
-      password: ""
+      password: "",
+      isSignedIn: false,
     };
   },
   methods: {
