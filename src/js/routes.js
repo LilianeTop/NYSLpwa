@@ -1,33 +1,38 @@
-
 import HomePage from '../pages/home.vue';
-import AboutPage from '../pages/about.vue';
-import FormPage from '../pages/form.vue';
-
+import GameSchedulePage from '../pages/game-schedule.vue';
+import TeamsPage from '../pages/teams.vue'
+import AllplayersPage from '../pages/allplayers.vue';
+import ContactPage from '../pages/contact.vue';
 
 import DynamicRoutePage from '../pages/dynamic-route.vue';
 import RequestAndLoad from '../pages/request-and-load.vue';
 import NotFoundPage from '../pages/404.vue';
 
-var routes = [
-  {
-    path: '/',
-    component: HomePage,
-  },
-  {
-    path: '/about/',
-    component: AboutPage,
-  },
-  {
-    path: '/form/',
-    component: FormPage,
-  },
-
+var routes = [{
+      path: '/',
+      component: HomePage,
+    },
+    {
+      path: '/game-schedule/',
+      component: GameSchedulePage,
+    },
+    {
+      path: '/teams/',
+      component: TeamsPage,
+    },
+    {
+      path: '/players/',
+      component: AllplayersPage,
+    },
+    {
+      path: '/contact/',
+      component: ContactPage,
+    },
 
   {
     path: '/dynamic-route/blog/:blogId/post/:postId/',
     component: DynamicRoutePage,
-  },
-  {
+  }, {
     path: '/request-and-load/user/:userId/',
     async: function (routeTo, routeFrom, resolve, reject) {
       // Router instance
@@ -49,8 +54,7 @@ var routes = [
           firstName: 'Vladimir',
           lastName: 'Kharlampidi',
           about: 'Hello, i am creator of Framework7! Hope you like it!',
-          links: [
-            {
+          links: [{
               title: 'Framework7 Website',
               url: 'http://framework7.io',
             },
@@ -64,20 +68,16 @@ var routes = [
         app.preloader.hide();
 
         // Resolve route to load page
-        resolve(
-          {
-            component: RequestAndLoad,
-          },
-          {
-            context: {
-              user: user,
-            }
+        resolve({
+          component: RequestAndLoad,
+        }, {
+          context: {
+            user: user,
           }
-        );
+        });
       }, 1000);
     },
-  },
-  {
+  }, {
     path: '(.*)',
     component: NotFoundPage,
   },

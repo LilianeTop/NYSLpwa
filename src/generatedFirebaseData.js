@@ -39,7 +39,7 @@ function generateMatch() {
     } while (team1 === team2);
 
     // random date between 2019 and 2020
-    const matchDate = randomDate(new Date(2019, 0, 1), new Date(2020, 12, 31), false);
+    const matchDate = randomDate(new Date(2019, 0, 0), new Date(2021, 0, 0), false);
 
     // iterate over the players in team1 and assign the goals and cards
     for (let player in team1) {
@@ -110,12 +110,12 @@ const matchTime = () => {
 }
 
 // pushing matches to Firebase
-function pushMatches() {
+async function pushMatches() {
     const ref = 'matches';
     removeIfExists(ref);
 
-    for (let i = 0; i < 6; i++) {
-        pushData(generateMatch(), ref);
+    for (let i = 0; i < 100; i++) {
+        await pushData(generateMatch(), ref);
     }
 }
 // create team object with playerkeys
@@ -138,7 +138,7 @@ function pushTeams() {
     players.forEach((player, index) => {
         arrPlayerKeys.push(player.key);
         if ((index + 1) % 11 === 0) {
-            teams.push(pushData(generateTeam(teamNames[teamNameIndex], arrPlayerKeys), ref));
+            pushData(generateTeam(teamNames[teamNameIndex], arrPlayerKeys), ref);
             teamNameIndex++;
             arrPlayerKeys.splice(0);
         }
@@ -183,8 +183,7 @@ function pushPlayers() {
         const startDate = new Date(2006, 0, 1);
         const endDate = new Date(2011, 12, 31);
 
-        const player = pushData(generatePlayer(firstName, lastName, shirtNumber, randomDate(startDate, endDate, true)), ref);
-        players.push(player);
+        pushData(generatePlayer(firstName, lastName, shirtNumber, randomDate(startDate, endDate, true)), ref);
     }
 }
 // creating a random birthdate or a random matchDate between startDate & endDate
@@ -211,11 +210,18 @@ function pushData(data, ref) {
     const key = db.ref().child(ref).push().key; // generates key/id
     let updates = {};
     updates[`/${ref}/` + key] = data
-    db.ref().update(updates)
 
     data.key = key;
+    switch (ref) {
+        case 'players':
+            players.push(data);
+            break;
+        case 'teams':
+            teams.push(data);
+            break;
+    }
 
-    return data;
+    return db.ref().update(updates)
 }
 // invoking all functions
 pushPlayers();

@@ -1,7 +1,7 @@
 <template>
   <f7-app :params="f7params">
     <!-- Left panel with cover effect-->
-    <f7-panel left swipe cover class="bg-color-green">
+    <f7-panel left swipe swipeActiveArea=100 cover class="bg-color-green">
       <f7-view>
         <f7-page>
           <f7-navbar title="Menu"></f7-navbar>
@@ -9,19 +9,19 @@
             <f7-list-item link="#" title="Home">
               <f7-icon slot="media" icon="demo-list-icon"></f7-icon>
             </f7-list-item>
-            <f7-list-item link="#" title="Game Schedule">
+            <f7-list-item link="/game-schedule/" view='#main' panel-close title="Game Schedule">
               <f7-icon slot="media" icon="demo-list-icon"></f7-icon>
             </f7-list-item>
-            <f7-list-item link="#" title="Teams">
+            <f7-list-item link="/teams/" view='#main' panel-close title="Teams">
               <f7-icon slot="media" icon="demo-list-icon"></f7-icon>
             </f7-list-item>
-            <f7-list-item link="#" title="Players">
+            <f7-list-item link="/players/" view='#main' panel-close title="Players">
               <f7-icon slot="media" icon="demo-list-icon"></f7-icon>
             </f7-list-item>
             <f7-list-item v-if="isSignedIn" link="#" title="Chat">
               <f7-icon slot="media" icon="demo-list-icon"></f7-icon>
             </f7-list-item>
-            <f7-list-item link="#" title="Contact">
+            <f7-list-item link="/contact/" view='#main' panel-close title="Contact">
               <f7-icon slot="media" icon="demo-list-icon"></f7-icon>
             </f7-list-item>
           </f7-list>
@@ -160,6 +160,7 @@ export default {
           this.isSignedIn = true;
           console.log(user);
         } else {
+          this.isSignedIn = false;
           // User is signed out.
           // ...
         }

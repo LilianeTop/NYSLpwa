@@ -1,5 +1,5 @@
 <template>
-  <f7-page name="home">
+  <f7-page id='main' name="home">
     <!-- Top Navbar -->
     <f7-navbar :sliding="false" large>
       <f7-nav-left>
