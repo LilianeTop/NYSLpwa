@@ -1,7 +1,8 @@
 import HomePage from '../pages/home.vue';
 import GameSchedulePage from '../pages/game-schedule.vue';
 import TeamsPage from '../pages/teams.vue'
-import AllplayersPage from '../pages/allplayers.vue';
+import TeamPlayersPage from '../pages/team-players.vue';
+import TeamStatisticsPage from '../pages/team-statistics.vue';
 import ContactPage from '../pages/contact.vue';
 
 import DynamicRoutePage from '../pages/dynamic-route.vue';
@@ -9,25 +10,33 @@ import RequestAndLoad from '../pages/request-and-load.vue';
 import NotFoundPage from '../pages/404.vue';
 
 var routes = [{
-      path: '/',
-      component: HomePage,
-    },
-    {
-      path: '/game-schedule/',
-      component: GameSchedulePage,
-    },
-    {
-      path: '/teams/',
-      component: TeamsPage,
-    },
-    {
-      path: '/players/',
-      component: AllplayersPage,
-    },
-    {
-      path: '/contact/',
-      component: ContactPage,
-    },
+    path: '/',
+    component: HomePage,
+  },
+  {
+    path: '/game-schedule/',
+    component: GameSchedulePage,
+  },
+  {
+    path: '/teams/',
+    component: TeamsPage,
+  },
+  {
+    path: '/:teamId/players/',
+    component: TeamPlayersPage,
+  },
+  {
+    path: '/:teamId/statistics/',
+    component: TeamStatisticsPage,
+  },
+  {
+    path: '/players/',
+    component: TeamPlayersPage,
+  },
+  {
+    path: '/contact/',
+    component: ContactPage,
+  },
 
   {
     path: '/dynamic-route/blog/:blogId/post/:postId/',

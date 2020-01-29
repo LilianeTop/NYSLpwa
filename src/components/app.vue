@@ -1,7 +1,7 @@
 <template>
   <f7-app :params="f7params">
     <!-- Left panel with cover effect-->
-    <f7-panel left swipe swipeActiveArea=100 cover class="bg-color-green">
+    <f7-panel left swipe swipeActiveArea="100" cover class="bg-color-green">
       <f7-view>
         <f7-page>
           <f7-navbar title="Menu"></f7-navbar>
@@ -9,19 +9,19 @@
             <f7-list-item link="#" title="Home">
               <f7-icon slot="media" icon="demo-list-icon"></f7-icon>
             </f7-list-item>
-            <f7-list-item link="/game-schedule/" view='#main' panel-close title="Game Schedule">
+            <f7-list-item link="/game-schedule/" view="#main" panel-close title="Game Schedule">
               <f7-icon slot="media" icon="demo-list-icon"></f7-icon>
             </f7-list-item>
-            <f7-list-item link="/teams/" view='#main' panel-close title="Teams">
+            <f7-list-item link="/teams/" view="#main" panel-close title="Teams">
               <f7-icon slot="media" icon="demo-list-icon"></f7-icon>
             </f7-list-item>
-            <f7-list-item link="/players/" view='#main' panel-close title="Players">
+            <f7-list-item link="/players/" view="#main" panel-close title="Players">
               <f7-icon slot="media" icon="demo-list-icon"></f7-icon>
             </f7-list-item>
             <f7-list-item v-if="isSignedIn" link="#" title="Chat">
               <f7-icon slot="media" icon="demo-list-icon"></f7-icon>
             </f7-list-item>
-            <f7-list-item link="/contact/" view='#main' panel-close title="Contact">
+            <f7-list-item link="/contact/" view="#main" panel-close title="Contact">
               <f7-icon slot="media" icon="demo-list-icon"></f7-icon>
             </f7-list-item>
           </f7-list>
@@ -41,22 +41,6 @@
 
     <!-- Your main view, should have "view-main" class -->
     <f7-view main class="safe-areas" url="/"></f7-view>
-
-    <!-- Popup -->
-    <f7-popup id="my-popup">
-      <f7-view>
-        <f7-page>
-          <f7-navbar title="Popup">
-            <f7-nav-right>
-              <f7-link popup-close>Close</f7-link>
-            </f7-nav-right>
-          </f7-navbar>
-          <f7-block>
-            <p>Popup content goes here.</p>
-          </f7-block>
-        </f7-page>
-      </f7-view>
-    </f7-popup>
 
     <f7-login-screen id="login-screen">
       <f7-view>
@@ -113,7 +97,6 @@ if (!firebase.apps.length) {
   firebase.initializeApp(firebaseConfig);
 }
 const auth = firebase.auth();
-
 export default {
   data() {
     return {
@@ -133,22 +116,24 @@ export default {
       // Login screen data
       username: "",
       password: "",
-      isSignedIn: false,
+      isSignedIn: false
     };
   },
   methods: {
     login() {
-      // this.$f7.dialog.alert(
-      //   "Username: " + this.username + "<br>Password: " + this.password
-      // );
-      auth
-        .signInWithEmailAndPassword(this.username, this.password)
-        .catch(error => {
-          // Handle Errors here.
-          const errorCode = error.code;
-          const errorMessage = error.message;
-        });
-      console.log(this.username + " " + this.password);
+      if (!isSignedIn) {
+        auth
+          .signInWithEmailAndPassword(this.username, this.password)
+          .catch(error => {
+            // Handle Errors here.
+            const errorCode = error.code;
+            const errorMessage = error.message;
+          });
+      }
+      // console.log(this.username + " " + this.password);
+    },
+    logout() {
+      if (isSignedIn) auth.signOut();
     }
   },
   mounted() {

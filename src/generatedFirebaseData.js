@@ -31,35 +31,36 @@ function removeIfExists(ref) {
 // generate a match between 2 random teams on a random date which has to be a saturday
 // matchTime also randomly created
 function generateMatch() {
+    // const team1 = teams[Math.floor(Math.random() * teams.length)];
     const team1 = teams[Math.floor(Math.random() * teams.length)];
+    const teamCopy1 = Object.assign({}, team1);
     let team2;
     //while team2 equals team1 select another team
     do {
         team2 = teams[Math.floor(Math.random() * teams.length)];
     } while (team1 === team2);
+    const teamCopy2 = Object.assign({}, team2);
 
     // random date between 2019 and 2020
     const matchDate = randomDate(new Date(2019, 0, 0), new Date(2021, 0, 0), false);
 
     // iterate over the players in team1 and assign the goals and cards
-    for (let player in team1) {
-        if (team1[player] === true) {
-            team1[player] = {
-                goals: calcGoals(),
-                yellow_cards: yellowCards()
-            };
-            team1[player].red_card = redCard(team1[player].yellow_cards);
+    for (let playerKey in team1) {
+        if (team1[playerKey] === true) {
+            teamCopy1[playerKey] = {};
+            teamCopy1[playerKey].goals = calcGoals();
+            teamCopy1[playerKey].yellow_cards = yellowCards(); 
+            teamCopy1[playerKey].red_card = redCard(teamCopy1[playerKey].yellow_cards); // two yellow cards equals 1 red card
         }
     }
 
     // iterate over the players in team2 and assign the goals and cards
-    for (let player in team2) {
-        if (team1[player] === true) {
-            team1[player] = {
-                goals: calcGoals(),
-                yellow_cards: yellowCards()
-            };
-            team1[player].red_card = redCard(team1[player].yellow_cards); // two yellow cards equals 1 red card
+    for (let playerKey in team2) {
+        if (team2[playerKey] === true) {
+            teamCopy2[playerKey] = {};
+            teamCopy2[playerKey].goals = calcGoals();
+            teamCopy2[playerKey].yellow_cards = yellowCards(); 
+            teamCopy2[playerKey].red_card = redCard(teamCopy2[playerKey].yellow_cards); // two yellow cards equals 1 red card
         }
     }
     // create Match object
@@ -69,16 +70,17 @@ function generateMatch() {
     }
 
     // attaching 2 teams to a match
-    match[team1.key] = team1;
-    match[team2.key] = team2;
+    match[team1.key] = teamCopy1;
+    match[team2.key] = teamCopy2;
 
     return match;
 }
+
 //calculate goals with 20% chance per player
 const calcGoals = () => {
     const pct = Math.random();
     if (pct < 0.2) {
-        return Math.floor(Math.random() * 3);
+        return Math.floor(Math.random() * 3) + 1;
     } else return 0;
 }
 
@@ -86,7 +88,7 @@ const calcGoals = () => {
 const yellowCards = () => {
     const pct = Math.random();
     if (pct < 0.1) {
-        return Math.floor(Math.random() * 2);
+        return Math.round(Math.random() * 2);
     } else return 0;
 }
 
@@ -96,7 +98,7 @@ const redCard = (yellowCards) => {
     else {
         const pct = Math.random();
         if (pct < 0.01) {
-            return Math.floor(Math.random());
+            return 1;
         } else return 0;
     }
 }
@@ -219,10 +221,14 @@ function pushData(data, ref) {
         case 'teams':
             teams.push(data);
             break;
+        case 'matches':
+            // console.log(data);
+            break;
     }
 
     return db.ref().update(updates)
 }
+
 // invoking all functions
 pushPlayers();
 pushTeams();

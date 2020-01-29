@@ -1,24 +1,29 @@
 <template>
-  <f7-card>
-    <f7-card-header class="cardHeader">{{ team.name }}</f7-card-header>
-    <f7-card-content>
-      
-    </f7-card-content>
-    <f7-card-footer>
-      <f7-link href="/players/" text="players"></f7-link>
-      <f7-link href="#" text="statistics"></f7-link>
-      <f7-link href="/game-schedule/" text="schedule"></f7-link>
-    </f7-card-footer>
-  </f7-card>
+  <div>
+    <f7-card>
+      <f7-card-header class="cardHeader">{{ team.name }}</f7-card-header>
+      <f7-card-content></f7-card-content>
+      <f7-card-footer>
+        <f7-link :href="teamUrlPlayers" text="players"></f7-link>
+        <f7-link @click="openStatistics(team)" text="statistics"></f7-link>
+        <f7-link href="/game-schedule/" text="schedule"></f7-link>
+      </f7-card-footer>
+    </f7-card>
+  </div>
 </template>
 <script>
 export default {
-  props: ["team"]
+  props: ["team", "openStatistics"],
+  computed: {
+    teamUrlPlayers: function() {
+      return `/${this.team.key}/players/`;
+    }
+  }
 };
 </script>
 
 <style scoped>
-.cardHeader {
+.card-header {
   justify-content: center;
 
   color: green;
