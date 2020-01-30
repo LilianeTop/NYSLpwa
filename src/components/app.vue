@@ -9,19 +9,34 @@
             <f7-list-item link="#" title="Home">
               <f7-icon slot="media" icon="demo-list-icon"></f7-icon>
             </f7-list-item>
-            <f7-list-item link="/game-schedule/" view="#main" panel-close title="Game Schedule">
+            <f7-list-item
+              link="/game-schedule/"
+              view="#main"
+              panel-close
+              title="Game Schedule"
+            >
               <f7-icon slot="media" icon="demo-list-icon"></f7-icon>
             </f7-list-item>
             <f7-list-item link="/teams/" view="#main" panel-close title="Teams">
               <f7-icon slot="media" icon="demo-list-icon"></f7-icon>
             </f7-list-item>
-            <f7-list-item link="/players/" view="#main" panel-close title="Players">
+            <f7-list-item
+              link="/players/"
+              view="#main"
+              panel-close
+              title="Players"
+            >
               <f7-icon slot="media" icon="demo-list-icon"></f7-icon>
             </f7-list-item>
             <f7-list-item v-if="isSignedIn" link="#" title="Chat">
               <f7-icon slot="media" icon="demo-list-icon"></f7-icon>
             </f7-list-item>
-            <f7-list-item link="/contact/" view="#main" panel-close title="Contact">
+            <f7-list-item
+              link="/contact/"
+              view="#main"
+              panel-close
+              title="Contact"
+            >
               <f7-icon slot="media" icon="demo-list-icon"></f7-icon>
             </f7-list-item>
           </f7-list>
@@ -63,7 +78,11 @@
             ></f7-list-input>
           </f7-list>
           <f7-list>
-            <f7-list-button title="Sign In" login-screen-close @click="login"></f7-list-button>
+            <f7-list-button
+              title="Sign In"
+              login-screen-close
+              @click="login"
+            ></f7-list-button>
             <f7-block-footer>
               Some text about login information.
               <br />Click "Sign In" to close Login Screen
@@ -76,27 +95,9 @@
 </template>
 <script>
 import routes from "../js/routes.js";
-const firebase = require("firebase/app");
-
-// Add the Firebase products that you want to use
-require("firebase/auth");
-
-const firebaseConfig = {
-  apiKey: "AIzaSyAibTbTOH_foNgXRdcT8SkJzGGMtx_lWcg",
-  authDomain: "nysl-261007.firebaseapp.com",
-  databaseURL: "https://nysl-261007.firebaseio.com",
-  projectId: "nysl-261007",
-  storageBucket: "nysl-261007.appspot.com",
-  messagingSenderId: "304886205033",
-  appId: "1:304886205033:web:5470ca0a7f9ced6887b0f8",
-  measurementId: "G-E4BPBCGEPZ"
-};
-
-if (!firebase.apps.length) {
-  // Initialize Firebase
-  firebase.initializeApp(firebaseConfig);
-}
+const firebase = require("../js/firebase");
 const auth = firebase.auth();
+
 export default {
   data() {
     return {
@@ -104,6 +105,7 @@ export default {
       f7params: {
         name: "NYSL", // App name
         theme: "auto", // Automatic theme detection
+        isSignedIn: false,
 
         // App routes
         routes: routes,
@@ -121,7 +123,7 @@ export default {
   },
   methods: {
     login() {
-      if (!isSignedIn) {
+      if (!this.isSignedIn) {
         auth
           .signInWithEmailAndPassword(this.username, this.password)
           .catch(error => {
@@ -133,7 +135,7 @@ export default {
       // console.log(this.username + " " + this.password);
     },
     logout() {
-      if (isSignedIn) auth.signOut();
+      if (this.isSignedIn) auth.signOut();
     }
   },
   mounted() {
@@ -143,11 +145,13 @@ export default {
         if (user) {
           // User is signed in.
           this.isSignedIn = true;
+          f7.isSignedIn = true;
           console.log(user);
         } else {
-          this.isSignedIn = false;
           // User is signed out.
           // ...
+          this.isSignedIn = false;
+          f7.isSignedIn = false;
         }
       });
     });

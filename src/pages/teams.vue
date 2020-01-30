@@ -6,7 +6,7 @@
 
     <f7-sheet :opened="statisticsOpened" @sheet:closed="statisticsOpened = false">
       <f7-toolbar>
-        <div class="left">{{clickedTeam.name}}</div>
+        <div class="center">{{clickedTeam.name}}</div>
         <div class="right">
           <f7-link sheet-close>X</f7-link>
         </div>
@@ -87,3 +87,9 @@ export default {
   }
 };
 </script>
+
+<style scoped>
+  center{
+    align-self: center;
+  }
+</style>

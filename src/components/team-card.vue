@@ -6,7 +6,7 @@
       <f7-card-footer>
         <f7-link :href="teamUrlPlayers" text="players"></f7-link>
         <f7-link @click="openStatistics(team)" text="statistics"></f7-link>
-        <f7-link href="/game-schedule/" text="schedule"></f7-link>
+        <f7-link :href="teamUrlSchedule" text="schedule"></f7-link>
       </f7-card-footer>
     </f7-card>
   </div>
@@ -17,6 +17,9 @@ export default {
   computed: {
     teamUrlPlayers: function() {
       return `/${this.team.key}/players/`;
+    },
+    teamUrlSchedule: function() {
+      return `/game-schedule/${this.team.key}/`;
     }
   }
 };
@@ -25,7 +28,5 @@ export default {
 <style scoped>
 .card-header {
   justify-content: center;
-
-  color: green;
 }
 </style>
