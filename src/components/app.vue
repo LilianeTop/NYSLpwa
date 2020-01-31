@@ -1,8 +1,8 @@
 <template>
   <f7-app :params="f7params">
     <!-- Left panel with cover effect-->
-    <f7-panel left swipe swipeActiveArea="100" cover class="bg-color-green">
-      <f7-view>
+    <f7-panel left swipe :swipeActiveArea="100" cover class="bg-color-green">
+      <f7-view @team-color="teamColor">
         <f7-page>
           <f7-navbar title="Menu"></f7-navbar>
           <f7-list>
@@ -28,7 +28,13 @@
             >
               <f7-icon slot="media" icon="demo-list-icon"></f7-icon>
             </f7-list-item>
-            <f7-list-item v-if="isSignedIn" link="#" title="Chat">
+            <f7-list-item
+              v-if="isSignedIn"
+              link="/chat/"
+              view="#main"
+              panel-close
+              title="Chat"
+            >
               <f7-icon slot="media" icon="demo-list-icon"></f7-icon>
             </f7-list-item>
             <f7-list-item
@@ -78,11 +84,7 @@
             ></f7-list-input>
           </f7-list>
           <f7-list>
-            <f7-list-button
-              title="Sign In"
-              login-screen-close
-              @click="login"
-            ></f7-list-button>
+            <f7-list-button title="Sign In" @click="login"></f7-list-button>
             <f7-block-footer>
               Some text about login information.
               <br />Click "Sign In" to close Login Screen
@@ -130,12 +132,10 @@ export default {
             // Handle Errors here.
             const errorCode = error.code;
             const errorMessage = error.message;
+            this.$f7.dialog.alert(errorMessage, () => {});
           });
       }
       // console.log(this.username + " " + this.password);
-    },
-    logout() {
-      if (this.isSignedIn) auth.signOut();
     }
   },
   mounted() {
@@ -146,7 +146,8 @@ export default {
           // User is signed in.
           this.isSignedIn = true;
           f7.isSignedIn = true;
-          console.log(user);
+          this.$f7.loginScreen.close();
+          // console.log(user);
         } else {
           // User is signed out.
           // ...
@@ -158,3 +159,23 @@ export default {
   }
 };
 </script>
+<style>
+.team-U1-bg {
+  background-color: rgb(230, 69, 69);
+}
+.team-U2-bg {
+  background-color: rgb(19, 199, 199);
+}
+.team-U3-bg {
+  background-color: rgb(195, 107, 206);
+}
+.team-U4-bg {
+  background-color: rgb(147, 199, 16);
+}
+.team-U5-bg {
+  background-color: rgb(175, 88, 88);
+}
+.team-U6-bg {
+  background-color: rgb(140, 133, 208);
+}
+</style>

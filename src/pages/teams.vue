@@ -2,19 +2,29 @@
   <f7-page name="teams">
     <f7-navbar title="Teams" back-link="Back"></f7-navbar>
     <f7-block-title>Teams</f7-block-title>
-    <team-card v-for="team in teams" :key="team.key" :team="team" :openStatistics="openStatistics" />
+    <f7-list>
+      <team-card
+        v-for="team in teams"
+        :key="team.key"
+        :team="team"
+        :openStatistics="openStatistics"
+      />
+    </f7-list>
 
-    <f7-sheet :opened="statisticsOpened" @sheet:closed="statisticsOpened = false">
+    <f7-sheet
+      :opened="statisticsOpened"
+      @sheet:closed="statisticsOpened = false"
+    >
       <f7-toolbar>
-        <div class="center">{{clickedTeam.name}}</div>
+        <div class="center">{{ clickedTeam.name }}</div>
         <div class="right">
           <f7-link sheet-close>X</f7-link>
         </div>
       </f7-toolbar>
       <f7-page-content>
-        <div>Total goals: {{goalsTotal}}</div>
-        <div>Total yellow cards: {{yellowCardsTotal}}</div>
-        <div>Total red cards: {{redCardsTotal}}</div>
+        <div>Total goals: {{ goalsTotal }}</div>
+        <div>Total yellow cards: {{ yellowCardsTotal }}</div>
+        <div>Total red cards: {{ redCardsTotal }}</div>
       </f7-page-content>
     </f7-sheet>
   </f7-page>
@@ -89,7 +99,7 @@ export default {
 </script>
 
 <style scoped>
-  center{
-    align-self: center;
-  }
+center {
+  align-self: center;
+}
 </style>

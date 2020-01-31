@@ -1,7 +1,9 @@
 <template>
   <div>
     <f7-card>
-      <f7-card-header class="cardHeader">{{ team.name }}</f7-card-header>
+      <f7-card-header class="cardHeader" :class="teamColor(team.name)">
+        {{ team.name }}
+      </f7-card-header>
       <f7-card-content></f7-card-content>
       <f7-card-footer>
         <f7-link :href="teamUrlPlayers" text="players"></f7-link>
@@ -28,5 +30,7 @@ export default {
 <style scoped>
 .card-header {
   justify-content: center;
+  color: white;
+  border-bottom: 1px solid white;
 }
 </style>

@@ -1,24 +1,35 @@
 <template>
-  <f7-card class="match-card">
-    <f7-card-header v-if="!isPlayedMatch">
-      <i class="far fa-futbol"></i>
-      <span class="bold" v-if="teamOne && teamTwo">
-        {{ teamOne.name }} - {{ teamTwo.name }}
-      </span>
-      <i class="far fa-futbol"></i>
+  <f7-card class="match-card" v-if="teamOne && teamTwo">
+    <f7-card-header class="match-upcoming-header" v-if="!isPlayedMatch">
+      <div class="teams team-left" :class="teamColor(teamOne.name)">
+        <i class="far fa-futbol"></i>
+        <span class="bold"> &nbsp;{{ teamOne.name }} </span>
+      </div>
+      <div class="teams team-right" :class="teamColor(teamTwo.name)">
+        <i class="far fa-futbol"></i>
+        <span class="bold"> &nbsp;{{ teamTwo.name }} </span>
+      </div>
     </f7-card-header>
     <!-- Header for matches that have been played -->
-    <f7-card-header class="match-header" v-else>
-      <div v-if="teamOne && teamTwo">
+    <f7-card-header class="match-history-header" v-else>
+      <div >
         <f7-row
-          :class="{ bold: teamScore(teamOne) > teamScore(teamTwo) }"
+          :class="[
+            (teamScore(teamOne) > teamScore(teamTwo) ? 'bold' : '',
+            teamColor(teamOne.name))
+          ]"
+          class="team-one-row"
           id="teamOneRow"
         >
           <f7-col>{{ teamOne.name }}</f7-col>
           <f7-col style="text-align: end;">{{ teamScore(teamOne) }}</f7-col>
         </f7-row>
         <f7-row
-          :class="{ bold: teamScore(teamTwo) > teamScore(teamOne) }"
+          :class="[
+            (teamScore(teamTwo) > teamScore(teamOne) ? 'bold' : '',
+            teamColor(teamTwo.name))
+          ]"
+          class="team-two-row"
           id="teamTwoRow"
         >
           <f7-col>{{ teamTwo.name }}</f7-col>
@@ -61,14 +72,43 @@ export default {
   align-content: center;
   min-width: 200px;
 }
-.match-header {
-  display: block;
+.match-upcoming-header {
+  justify-content: space-between;
+  padding: 0;
 }
+.teams {
+  flex-grow: 1;
+  align-self: stretch;
+  display: flex;
+  margin: 0 auto;
+  align-items: center;
+  justify-content: center;
+  color: white;
+}
+.team-left {
+  border-right: 1px solid white;
+}
+.team-right {
+  border-left: 1px solid white;
+}
+
+.match-history-header {
+  display: block;
+  padding: 0;
+}
+
 .bold {
   font-weight: bold;
 }
 
-.align-end {
-  text-align: end;
+.team-one-row {
+  padding: 4px 12px 2px 12px;
+  color: white;
+  border-bottom: 1px solid white;
+}
+
+.team-two-row {
+  padding: 2px 12px 4px 12px;
+  color: white;
 }
 </style>

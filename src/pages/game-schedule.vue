@@ -1,6 +1,6 @@
 <template>
   <f7-page name="game-schedule">
-    <f7-navbar title="Game Schedule" back-link="Back"></f7-navbar>
+    <f7-navbar :title="navbarTitle" back-link="Back"></f7-navbar>
     <f7-block-title>Upcoming Events</f7-block-title>
     <f7-block strong class="matches">
       <match-card
@@ -51,6 +51,15 @@ export default {
           this.teams.push(team);
         });
       });
+  },
+  computed: {
+    navbarTitle: function() {
+      const teamId = this.$f7route.params.teamId;
+      if (teamId) {
+        const team = this.getMatchTeam(teamId);
+        if (team) return `Game schedule from ${team.name}`;
+      } else return "Game schedule";
+    }
   },
   methods: {
     getMatchTeam: function(teamKey) {

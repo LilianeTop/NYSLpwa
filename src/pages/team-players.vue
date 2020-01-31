@@ -1,8 +1,13 @@
 <template>
   <f7-page name="team-players">
     <f7-navbar title="Players" back-link="Back"></f7-navbar>
-    <f7-block>
-      <player-card v-for="team in teams" :key="team.key" :team="team" />
+    <f7-block class="team-list">
+      <player-card
+        v-for="team in teams"
+        :key="team.key"
+        :team="team"
+        :loading="loading"
+      />
     </f7-block>
   </f7-page>
 </template>
@@ -16,7 +21,8 @@ export default {
   data() {
     return {
       players: [],
-      teams: []
+      teams: [],
+      loading: false
     };
   },
   components: {
@@ -26,6 +32,8 @@ export default {
     const teamId = this.$f7route.params.teamId;
     const db = firebase.database();
     const teamRef = db.ref("/teams/");
+
+    this.loading = true;
 
     if (teamId) {
       await teamRef
@@ -59,7 +67,6 @@ export default {
         });
       });
 
-    console.log(this.teams);
     this.teams.forEach(team => {
       for (let playerKey in team) {
         this.players.forEach(player => {
@@ -70,12 +77,14 @@ export default {
       }
     });
 
-    console.log(this.teams);
+    this.loading = false;
   }
 };
 </script>
 <style scoped>
-.badge {
-  margin-top: 50px;
+.team-list {
+  display: flex;
+  justify-content: space-evenly;
+  flex-wrap: wrap
 }
 </style>

@@ -1,7 +1,26 @@
 <template>
   <div>
     <f7-block-title>{{ team.name }}</f7-block-title>
-    <f7-list media-list>
+    <f7-list
+      media-list
+      v-if="loading"
+      class="skeleton-text skeleton-effect-fade"
+    >
+      <f7-list-item
+        v-for="n in 11"
+        :key="n"
+        class="player-card"
+        :class="teamColor('U1')"
+        accordion-item
+        title="Full name"
+        subtitle="Position"
+        text="7777-77-77"
+        after="44"
+      >
+        <f7-skeleton-block class="profile-img" slot="media"></f7-skeleton-block>
+      </f7-list-item>
+    </f7-list>
+    <f7-list media-list v-else>
       <f7-list-item
         class="player-card theme-light"
         :class="teamColor(team.name)"
@@ -20,7 +39,11 @@
           <div>Yellow cards: {{ player.yellow_cards_total }}</div>
           <div>Red cards: {{ player.red_cards_total }}</div>
         </f7-accordion-content>
-        <img class="profile-img" src="https://placeimg.com/80/80/people/1" slot="media" />
+        <img
+          class="profile-img"
+          src="https://placeimg.com/80/80/people/1"
+          slot="media"
+        />
       </f7-list-item>
     </f7-list>
   </div>
@@ -31,7 +54,7 @@ const firebase = require("firebase/app");
 require("firebase/database");
 
 export default {
-  props: ["team"],
+  props: ["team", "loading"],
   data() {
     return {};
   },
@@ -44,7 +67,6 @@ export default {
           teamPlayers.push(team[player]);
         }
       }
-
       return teamPlayers;
     }
   },
@@ -56,8 +78,6 @@ export default {
       return capitilized;
     },
     playerStats: async function(clickedPlayer) {
-      this.popupOpened = true;
-      // this.playerPopup = player;
       let goalsTotal = 0;
       let yellowCardsTotal = 0;
       let redCardsTotal = 0;
@@ -95,51 +115,20 @@ export default {
         });
 
       this.$forceUpdate();
-    },
-    teamColor: function(teamName) {
-      switch (teamName) {
-        case "U1":
-          return "player-card-U1";
-        case "U2":
-          return "player-card-U2";
-        case "U3":
-          return "player-card-U3";
-        case "U4":
-          return "player-card-U4";
-        case "U5":
-          return "player-card-U5";
-        case "U6":
-          return "player-card-U6";
-      }
     }
   }
 };
 </script>
 
 <style scoped>
+.player-list {
+  display: flex;
+}
+
 .player-card {
   margin: 5px 0;
   padding: 20px;
 }
-.player-card-U1 {
-  background-color: rgb(230, 69, 69);
-}
-.player-card-U2 {
-  background-color: rgb(19, 199, 199);
-}
-.player-card-U3 {
-  background-color: rgb(195, 107, 206);
-}
-.player-card-U4 {
-  background-color: rgb(147, 199, 16);
-}
-.player-card-U5 {
-  background-color: rgb(175, 88, 88);
-}
-.player-card-U6 {
-  background-color: rgb(140, 133, 208);
-}
-
 .profile-img {
   width: 40px;
   height: 40px;

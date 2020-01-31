@@ -24,7 +24,7 @@
           login-screen-open="#login-screen"
           >Log-In
         </f7-link>
-        <f7-link v-else>Logout</f7-link>
+        <f7-link @click="logout" v-else>Logout</f7-link>
       </f7-nav-right>
     </f7-navbar>
 
@@ -49,8 +49,10 @@ export default {
   data() {
     return {
       upcomingMatches: this.$f7route.context.upcomingMatches,
+      playerNames: this.$f7route.context.playerNames,
       teams: [],
-      isSignedIn: false
+      isSignedIn: false,
+      auth: firebase.auth()
     };
   },
   components: {
@@ -71,6 +73,25 @@ export default {
   mounted() {
     this.$f7ready(f7 => {
       this.isSignedIn = f7.isSignedIn;
+      this.auth.onAuthStateChanged(user => {
+        if (user) {
+          // User is signed in.
+          this.isSignedIn = true;
+          f7.isSignedIn = true;
+
+          if (!user.displayName) {
+            const randomName = this.playerNames[
+              Math.floor(Math.random() * this.playerNames.length)
+            ];
+            user.updateProfile({ displayName: randomName });
+          }
+        } else {
+          // User is signed out.
+          // ...
+          this.isSignedIn = false;
+          f7.isSignedIn = false;
+        }
+      });
     });
   },
   methods: {
@@ -78,6 +99,12 @@ export default {
       return this.teams.find(team => {
         return team.key === teamKey;
       });
+    },
+    logout() {
+      if (this.isSignedIn) {
+        this.auth.signOut();
+        this.isSignedIn = false;
+      }
     }
   }
 };
