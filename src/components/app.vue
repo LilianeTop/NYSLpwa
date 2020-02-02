@@ -5,9 +5,9 @@
       <f7-view @team-color="teamColor">
         <f7-page>
           <f7-navbar title="Menu"></f7-navbar>
-          <f7-list>
+          <f7-list class="m-0">
             <f7-list-item link="#" title="Home">
-              <f7-icon slot="media" icon="demo-list-icon"></f7-icon>
+              <f7-icon slot="media" material="home"></f7-icon>
             </f7-list-item>
             <f7-list-item
               link="/game-schedule/"
@@ -15,10 +15,10 @@
               panel-close
               title="Game Schedule"
             >
-              <f7-icon slot="media" icon="demo-list-icon"></f7-icon>
+              <f7-icon slot="media" material="schedule"></f7-icon>
             </f7-list-item>
             <f7-list-item link="/teams/" view="#main" panel-close title="Teams">
-              <f7-icon slot="media" icon="demo-list-icon"></f7-icon>
+              <f7-icon slot="media" material="group"></f7-icon>
             </f7-list-item>
             <f7-list-item
               link="/players/"
@@ -26,7 +26,7 @@
               panel-close
               title="Players"
             >
-              <f7-icon slot="media" icon="demo-list-icon"></f7-icon>
+              <f7-icon slot="media" material="person"></f7-icon>
             </f7-list-item>
             <f7-list-item
               v-if="isSignedIn"
@@ -35,7 +35,7 @@
               panel-close
               title="Chat"
             >
-              <f7-icon slot="media" icon="demo-list-icon"></f7-icon>
+              <f7-icon slot="media" material="chat"></f7-icon>
             </f7-list-item>
             <f7-list-item
               link="/contact/"
@@ -43,7 +43,7 @@
               panel-close
               title="Contact"
             >
-              <f7-icon slot="media" icon="demo-list-icon"></f7-icon>
+              <f7-icon slot="media" material="phone"></f7-icon>
             </f7-list-item>
           </f7-list>
         </f7-page>
@@ -177,5 +177,10 @@ export default {
 }
 .team-U6-bg {
   background-color: rgb(140, 133, 208);
+}
+</style>
+<style scoped>
+.m-0{
+  margin: 0;
 }
 </style>

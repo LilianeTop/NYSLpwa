@@ -3,16 +3,20 @@
     <f7-card-header class="match-upcoming-header" v-if="!isPlayedMatch">
       <div class="teams team-left" :class="teamColor(teamOne.name)">
         <i class="far fa-futbol"></i>
-        <span class="bold"> &nbsp;{{ teamOne.name }} </span>
+        <f7-link class="bold" :href="`/game-schedule/${teamOne.key}`">
+          &nbsp;{{ teamOne.name }}
+        </f7-link>
       </div>
       <div class="teams team-right" :class="teamColor(teamTwo.name)">
         <i class="far fa-futbol"></i>
-        <span class="bold"> &nbsp;{{ teamTwo.name }} </span>
+        <f7-link class="bold" :href="`/game-schedule/${teamTwo.key}`">
+          &nbsp;{{ teamTwo.name }}
+        </f7-link>
       </div>
     </f7-card-header>
     <!-- Header for matches that have been played -->
     <f7-card-header class="match-history-header" v-else>
-      <div >
+      <div>
         <f7-row
           :class="[
             (teamScore(teamOne) > teamScore(teamTwo) ? 'bold' : '',
@@ -99,6 +103,7 @@ export default {
 
 .bold {
   font-weight: bold;
+  color: white;
 }
 
 .team-one-row {

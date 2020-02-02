@@ -129,6 +129,7 @@ export default {
   margin: 5px 0;
   padding: 20px;
 }
+
 .profile-img {
   width: 40px;
   height: 40px;
