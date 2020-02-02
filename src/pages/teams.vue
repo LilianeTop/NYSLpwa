@@ -33,7 +33,6 @@
 import teamCard from "../components/team-card.vue";
 const firebase = require("firebase/app");
 
-require("firebase/database");
 let db;
 
 export default {

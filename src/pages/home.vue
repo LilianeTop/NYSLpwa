@@ -48,8 +48,8 @@ const firebase = require("../js/firebase");
 export default {
   data() {
     return {
-      upcomingMatches: this.$f7route.context.upcomingMatches,
-      playerNames: this.$f7route.context.playerNames,
+      upcomingMatches: [],
+      playerNames: [],
       teams: [],
       isSignedIn: false,
       auth: firebase.auth()
@@ -59,16 +59,14 @@ export default {
     matchCard
   },
   created: async function() {
-    const db = firebase.database();
-    await db
-      .ref("/teams/")
-      .once("value")
-      .then(snapshot => {
-        snapshot.forEach(snapshot => {
-          const team = snapshot.val();
-          this.teams.push(team);
-        });
-      });
+    var connectedRef = firebase.database().ref(".info/connected");
+    connectedRef.on("value", snapshot => {
+      if (snapshot.val() === true) {
+        this.getData();
+      } else {
+        return;
+      }
+    });
   },
   mounted() {
     this.$f7ready(f7 => {
@@ -100,11 +98,65 @@ export default {
         return team.key === teamKey;
       });
     },
-    logout() {
+    logout: function() {
       if (this.isSignedIn) {
         this.auth.signOut();
         this.isSignedIn = false;
       }
+    },
+    getData: async function() {
+      const db = firebase.database();
+
+      // get current date and format it
+      const date = new Date(Date.now());
+      let month = "" + (date.getMonth() + 1),
+        day = "" + (date.getDate() + 1), // get a day later for query
+        year = date.getFullYear();
+
+      if (month.length < 2) month = "0" + month;
+      if (day.length < 2) day = "0" + day;
+      const formattedDate = [year, month, day].join("-");
+
+      // get 3 upcoming matches
+      await db
+        .ref("/matches/")
+        .orderByChild("match_date")
+        .startAt(formattedDate)
+        .limitToFirst(4)
+        .once("value")
+        .then(matchesSnapshot => {
+          matchesSnapshot.forEach(matchSnapshot => {
+            // push upcoming matches to array
+            const match = matchSnapshot.val();
+            this.upcomingMatches.push(match);
+          });
+        });
+
+      // get 10 player names;
+      const playerNames = [];
+      await db
+        .ref("players")
+        .orderByChild("first_name")
+        .limitToFirst(11)
+        .once("value")
+        .then(snapshot => {
+          snapshot.forEach(playerSnapshot => {
+            const player = playerSnapshot.val();
+            const playerName = player.first_name + " " + player.last_name;
+            this.playerNames.push(playerName);
+          });
+        });
+
+      // get all teams to know which team plays which match
+      await db
+        .ref("/teams/")
+        .once("value")
+        .then(snapshot => {
+          snapshot.forEach(snapshot => {
+            const team = snapshot.val();
+            this.teams.push(team);
+          });
+        });
     }
   }
 };

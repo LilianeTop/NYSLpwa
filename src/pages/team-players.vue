@@ -15,8 +15,6 @@
 import playerCard from "../components/player-card.vue";
 const firebase = require("firebase/app");
 
-require("firebase/database");
-
 export default {
   data() {
     return {

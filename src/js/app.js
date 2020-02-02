@@ -20,6 +20,9 @@ import App from "../components/app.vue";
 // Init Framework7-Vue Plugin
 Framework7.use(Framework7Vue);
 
+// get firebase
+const firebase = require("./firebase");
+
 //Mixin for team color
 Vue.mixin({
   methods: {

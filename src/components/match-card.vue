@@ -2,14 +2,14 @@
   <f7-card class="match-card" v-if="teamOne && teamTwo">
     <f7-card-header class="match-upcoming-header" v-if="!isPlayedMatch">
       <div class="teams team-left" :class="teamColor(teamOne.name)">
-        <i class="far fa-futbol"></i>
         <f7-link class="bold" :href="`/game-schedule/${teamOne.key}`">
+          <i class="far fa-futbol"></i>
           &nbsp;{{ teamOne.name }}
         </f7-link>
       </div>
       <div class="teams team-right" :class="teamColor(teamTwo.name)">
-        <i class="far fa-futbol"></i>
         <f7-link class="bold" :href="`/game-schedule/${teamTwo.key}`">
+          <i class="far fa-futbol"></i>
           &nbsp;{{ teamTwo.name }}
         </f7-link>
       </div>

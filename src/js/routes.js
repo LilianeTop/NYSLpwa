@@ -11,59 +11,7 @@ const db = firebase.database();
 var routes = [
   {
     path: "/",
-    async: async function(routeTo, routeFrom, resolve, reject) {
-      const upcomingMatches = [];
-
-      // get current date and format it
-      const date = new Date(Date.now());
-      let month = "" + (date.getMonth() + 1),
-        day = "" + (date.getDate() + 1), // get a day later for query
-        year = date.getFullYear();
-
-      if (month.length < 2) month = "0" + month;
-      if (day.length < 2) day = "0" + day;
-      const formattedDate = [year, month, day].join("-");
-
-      // get 3 upcoming matches
-      await db
-        .ref("/matches/")
-        .orderByChild("match_date")
-        .startAt(formattedDate)
-        .limitToFirst(4)
-        .once("value")
-        .then(matchesSnapshot => {
-          matchesSnapshot.forEach(matchSnapshot => {
-            // push upcoming matches to array
-            const match = matchSnapshot.val();
-            upcomingMatches.push(match);
-          });
-        });
-
-      // get 10 player names;
-      const playerNames = [];
-      await db
-        .ref("players")
-        .orderByChild("first_name")
-        .limitToFirst(11)
-        .once("value")
-        .then(snapshot => {
-          snapshot.forEach(playerSnapshot => {
-            const player = playerSnapshot.val();
-            const playerName = player.first_name + " " + player.last_name;
-            playerNames.push(playerName);
-          });
-        });
-
-      resolve(
-        { component: HomePage },
-        {
-          context: {
-            upcomingMatches: upcomingMatches,
-            playerNames: playerNames
-          }
-        }
-      );
-    }
+    component: HomePage
   },
   {
     path: "/game-schedule/",

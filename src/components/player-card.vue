@@ -51,8 +51,6 @@
 <script>
 const firebase = require("firebase/app");
 
-require("firebase/database");
-
 export default {
   props: ["team", "loading"],
   data() {
