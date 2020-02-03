@@ -1,7 +1,7 @@
 <template>
-  <f7-page name="game-schedule">
+  <f7-page bg-color='teal' name="game-schedule">
     <f7-navbar :title="navbarTitle" back-link="Back"></f7-navbar>
-    <f7-block-title>Upcoming Events</f7-block-title>
+      <f7-block-title class="header">Upcoming Events</f7-block-title>
     <f7-block strong class="matches">
       <match-card
         v-for="match in upcomingMatches"
@@ -12,7 +12,7 @@
       />
     </f7-block>
     <div v-if="playedMatches && playedMatches.length > 0">
-      <f7-block-title>Match History</f7-block-title>
+      <f7-block-title class="header">Match History</f7-block-title>
       <f7-block strong class="matches">
         <match-card
           v-for="match in playedMatches"
@@ -71,10 +71,6 @@ export default {
 };
 </script>
 <style scoped>
-.matches {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-evenly;
-  background-color: #efeff4;
-}
+
+
 </style>

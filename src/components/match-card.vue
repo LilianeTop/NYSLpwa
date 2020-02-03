@@ -3,15 +3,11 @@
     <f7-card-header class="match-upcoming-header" v-if="!isPlayedMatch">
       <div class="teams team-left" :class="teamColor(teamOne.name)">
         <i class="far fa-futbol"></i>
-        <f7-link class="bold" :href="`/game-schedule/${teamOne.key}`">
-          &nbsp;{{ teamOne.name }}
-        </f7-link>
+        <f7-link class="bold" :href="`/game-schedule/${teamOne.key}`">&nbsp;{{ teamOne.name }}</f7-link>
       </div>
       <div class="teams team-right" :class="teamColor(teamTwo.name)">
         <i class="far fa-futbol"></i>
-        <f7-link class="bold" :href="`/game-schedule/${teamTwo.key}`">
-          &nbsp;{{ teamTwo.name }}
-        </f7-link>
+        <f7-link class="bold" :href="`/game-schedule/${teamTwo.key}`">&nbsp;{{ teamTwo.name }}</f7-link>
       </div>
     </f7-card-header>
     <!-- Header for matches that have been played -->
@@ -19,22 +15,20 @@
       <div>
         <f7-row
           :class="[
-            (teamScore(teamOne) > teamScore(teamTwo) ? 'bold' : '',
-            teamColor(teamOne.name))
+            teamScore(teamOne) > teamScore(teamTwo) ? 'bold' : '',
+            teamColor(teamOne.name)
           ]"
-          class="team-one-row"
-          id="teamOneRow"
+          class="team-one-row"      
         >
           <f7-col>{{ teamOne.name }}</f7-col>
           <f7-col style="text-align: end;">{{ teamScore(teamOne) }}</f7-col>
         </f7-row>
         <f7-row
           :class="[
-            (teamScore(teamTwo) > teamScore(teamOne) ? 'bold' : '',
-            teamColor(teamTwo.name))
+            teamScore(teamTwo) > teamScore(teamOne) ? 'bold' : '',
+            teamColor(teamTwo.name)
           ]"
           class="team-two-row"
-          id="teamTwoRow"
         >
           <f7-col>{{ teamTwo.name }}</f7-col>
           <f7-col style="text-align: end;">{{ teamScore(teamTwo) }}</f7-col>
@@ -42,7 +36,7 @@
       </div>
     </f7-card-header>
     <f7-card-content>
-      <p>Date: {{ match.match_date }}</p>
+      <p style="text-align: center">Date: {{ match.match_date }}</p>
     </f7-card-content>
   </f7-card>
 </template>
@@ -51,11 +45,13 @@
 export default {
   props: ["match", "teamOne", "teamTwo"],
   computed: {
+    //to separate matches upcoming vs history
     isPlayedMatch: function() {
       return new Date(this.match.match_date) < Date.now();
     }
   },
   methods: {
+    //calculate sum total of goals from team
     teamScore: function(teamToGetGoalsFrom) {
       const team = this.match[teamToGetGoalsFrom.key];
       let goals = 0;

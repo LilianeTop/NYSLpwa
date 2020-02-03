@@ -3,33 +3,37 @@ import GameSchedulePage from "../pages/game-schedule.vue";
 import TeamsPage from "../pages/teams.vue";
 import TeamPlayersPage from "../pages/team-players.vue";
 import ChatPage from "../pages/firechat.vue";
-import ContactPage from "../pages/contact.vue";
 import NotFoundPage from "../pages/404.vue";
 
 const firebase = require("./firebase");
 const db = firebase.database();
-var routes = [
-  {
+
+// get current date and format it
+function getFormattedDate() {
+  const date = new Date(Date.now());
+  let month = "" + (date.getMonth() + 1),
+    day = "" + (date.getDate() + 1), // get a day later for query
+    year = date.getFullYear();
+
+  if (month.length < 2) month = "0" + month;
+  if (day.length < 2) day = "0" + day;
+  return [year, month, day].join("-");
+}
+
+var routes = [{
     path: "/",
-    async: async function(routeTo, routeFrom, resolve, reject) {
+    alias: "/home/",
+    async: async function (routeTo, routeFrom, resolve, reject) {
       const upcomingMatches = [];
 
-      // get current date and format it
-      const date = new Date(Date.now());
-      let month = "" + (date.getMonth() + 1),
-        day = "" + (date.getDate() + 1), // get a day later for query
-        year = date.getFullYear();
+      const formattedDate = getFormattedDate();
 
-      if (month.length < 2) month = "0" + month;
-      if (day.length < 2) day = "0" + day;
-      const formattedDate = [year, month, day].join("-");
-
-      // get 3 upcoming matches
+      // get 6 upcoming matches
       await db
         .ref("/matches/")
         .orderByChild("match_date")
         .startAt(formattedDate)
-        .limitToFirst(4)
+        .limitToFirst(6)
         .once("value")
         .then(matchesSnapshot => {
           matchesSnapshot.forEach(matchSnapshot => {
@@ -39,7 +43,7 @@ var routes = [
           });
         });
 
-      // get 10 player names;
+      // get 11 player names for chat userdisplay name;
       const playerNames = [];
       await db
         .ref("players")
@@ -54,33 +58,25 @@ var routes = [
           });
         });
 
-      resolve(
-        { component: HomePage },
-        {
-          context: {
-            upcomingMatches: upcomingMatches,
-            playerNames: playerNames
-          }
+      resolve({
+        component: HomePage
+      }, {
+        context: {
+          upcomingMatches: upcomingMatches,
+          playerNames: playerNames
         }
-      );
+      });
     }
   },
   {
     path: "/game-schedule/",
-    async: async function(routeTo, routeFrom, resolve, reject) {
+    async: async function (routeTo, routeFrom, resolve, reject) {
       const router = this;
       const app = router.app;
       app.preloader.show();
       const upcomingMatches = [];
 
-      const date = new Date(Date.now());
-      let month = "" + (date.getMonth() + 1),
-        day = "" + (date.getDate() + 1),
-        year = date.getFullYear();
-
-      if (month.length < 2) month = "0" + month;
-      if (day.length < 2) day = "0" + day;
-      const formattedDate = [year, month, day].join("-");
+      const formattedDate = getFormattedDate();
 
       await db
         .ref("/matches/")
@@ -96,15 +92,18 @@ var routes = [
         });
 
       app.preloader.hide();
-      resolve(
-        { component: GameSchedulePage },
-        { context: { upcomingMatches: upcomingMatches } }
-      );
+      resolve({
+        component: GameSchedulePage
+      }, {
+        context: {
+          upcomingMatches: upcomingMatches
+        }
+      });
     }
   },
   {
     path: "/game-schedule/:teamId",
-    async: async function(routeTo, routeFrom, resolve, reject) {
+    async: async function (routeTo, routeFrom, resolve, reject) {
       const router = this;
       const app = router.app;
       const teamId = routeTo.params.teamId;
@@ -121,9 +120,9 @@ var routes = [
             const match = matchSnapshot.val();
 
             // loop through match properties
-            matchSnapshot.forEach(childSnapshot => {
-              if (typeof childSnapshot.val() === "object") {
-                const team = childSnapshot.val();
+            matchSnapshot.forEach(teamSnapshot => {
+              if (typeof teamSnapshot.val() === "object") {
+                const team = teamSnapshot.val();
                 if (team.key === teamId)
                   if (new Date(match.match_date) > Date.now()) {
                     upcomingMatches.push(match);
@@ -135,15 +134,14 @@ var routes = [
           });
         });
       app.preloader.hide();
-      resolve(
-        { component: GameSchedulePage },
-        {
-          context: {
-            playedMatches: playedMatches,
-            upcomingMatches: upcomingMatches
-          }
+      resolve({
+        component: GameSchedulePage
+      }, {
+        context: {
+          playedMatches: playedMatches,
+          upcomingMatches: upcomingMatches
         }
-      );
+      });
     }
   },
   {
@@ -161,10 +159,6 @@ var routes = [
   {
     path: "/chat/",
     component: ChatPage
-  },
-  {
-    path: "/contact/",
-    component: ContactPage
   },
   {
     path: "(.*)",

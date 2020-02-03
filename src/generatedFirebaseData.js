@@ -21,6 +21,9 @@ const db = firebase.database();
 const players = [];
 const teams = [];
 
+// picture for each team
+const teamImages= ["https://images4.persgroep.net/rcs/UoegkgxpSTCs7XAQ8eleWUP_x3k/diocontent/124689450/_fitwidth/763?appId=93a17a8fd81db0de025c8abd1cca1279&quality=0.8", "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSh_lxkra2ecYQ2Su9I9kvsbK4aBGy8NVP1aBs2bSGurWaiSKlP&s", "https://www.myrecordjournal.com/getattachment/f9e415f9-1dfe-4c06-af47-efc4566ca12f/attachment", "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSPMDtI-00Bjesp-kQ-xtUTrjOjsYAaq9jv5GF2_ARRBQ-haIKC-Q&s", "https://s3-eu-west-2.amazonaws.com/parikiaki-cdn-1/wp-content/uploads/20191107134853/pro-soccer-1.jpg","https://www.washingtonpost.com/wp-apps/imrs.php?src=https://arc-anglerfish-washpost-prod-washpost.s3.amazonaws.com/public/MF6GRKDMPY7RXDF54JUBOIJ3QU.jpg&w=767"]
+
 // check if table exist if so remove and create new empty one
 function removeIfExists(ref) {
   if (db.ref(`/${ref}/`)) {
@@ -131,9 +134,10 @@ async function pushMatches() {
   }
 }
 // create team object with playerkeys
-function generateTeam(teamName, arrPlayerKeys) {
+function generateTeam(teamName, teamImage, arrPlayerKeys) {
   const team = {
-    name: teamName
+    name: teamName,
+    source: teamImage
   };
   arrPlayerKeys.forEach(playerKey => (team[playerKey] = true));
   return team;
@@ -145,13 +149,13 @@ function pushTeams() {
 
   const arrPlayerKeys = [];
   const teamNames = ["U1", "U2", "U3", "U4", "U5", "U6"];
-  let teamNameIndex = 0;
+  let teamIndex = 0;
   // loop through player and assign to team
   players.forEach((player, index) => {
     arrPlayerKeys.push(player.key);
     if ((index + 1) % 11 === 0) {
-      pushData(generateTeam(teamNames[teamNameIndex], arrPlayerKeys), ref);
-      teamNameIndex++;
+      pushData(generateTeam(teamNames[teamIndex], teamImages[teamIndex], arrPlayerKeys), ref);
+      teamIndex++;
       arrPlayerKeys.splice(0);
     }
   });
@@ -162,7 +166,7 @@ function generatePlayer(firstName, lastName, shirtNumber, birthDate) {
   let position = "";
   if (shirtNumber === 1) {
     position = "goalkeeper";
-  } else if (shirtNumber < 6) {
+  } else if (shirtNumber < 6) { 
     position = "defender";
   } else if (shirtNumber < 10) {
     position = "midfielder";

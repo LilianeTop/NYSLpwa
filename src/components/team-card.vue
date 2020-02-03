@@ -1,10 +1,10 @@
 <template>
   <div>
     <f7-card>
-      <f7-card-header class="cardHeader" :class="teamColor(team.name)">
+      <f7-card-header class="cardHeader"  :class="teamColor(team.name)">
         {{ team.name }}
       </f7-card-header>
-      <f7-card-content></f7-card-content>
+      <f7-card-content :style="{backgroundImage: `url(${team.source})`}" class="team-image"></f7-card-content>
       <f7-card-footer>
         <f7-link :href="teamUrlPlayers" text="players"></f7-link>
         <f7-link @click="openStatistics(team)" text="statistics"></f7-link>
@@ -28,9 +28,16 @@ export default {
 </script>
 
 <style scoped>
+
 .card-header {
   justify-content: center;
   color: white;
   border-bottom: 1px solid white;
+  font-weight: bold;
+}
+.team-image {
+background-repeat: no-repeat;
+background-size: 100%;
+height: 150px;
 }
 </style>

@@ -1,18 +1,19 @@
 <template>
-  <f7-page id="main" name="home">
+  <f7-page bg-color='teal' id="main" name="home">
     <!-- Top Navbar -->
     <f7-navbar :sliding="false" large>
+      <!-- open navigation with hamburger -->
       <f7-nav-left>
-        <f7-link
-          icon-ios="f7:menu"
-          icon-aurora="f7:menu"
-          icon-md="material:menu"
-          panel-open="left"
-        ></f7-link>
+        <f7-link icon-ios="f7:menu" icon-aurora="f7:menu" icon-md="material:menu" panel-open="left"></f7-link>
       </f7-nav-left>
-      <f7-nav-title sliding>NYSL</f7-nav-title>
-
-      <f7-nav-title-large sliding>NYSL</f7-nav-title-large>
+      <!-- logo title -->
+      <f7-nav-title sliding>
+        <div class="logo">NYSL</div>
+      </f7-nav-title>
+      <f7-nav-title-large sliding>
+        <div class="logo">NYSL</div>
+      </f7-nav-title-large>
+      <!-- log in button -->
       <f7-nav-right>
         <f7-link
           v-if="!isSignedIn"
@@ -22,14 +23,13 @@
           fill
           raised
           login-screen-open="#login-screen"
-          >Log-In
-        </f7-link>
+        >Log-In</f7-link>
         <f7-link @click="logout" v-else>Logout</f7-link>
       </f7-nav-right>
     </f7-navbar>
 
-    <!-- Page content-->
-    <f7-block-title>Upcoming matches</f7-block-title>
+    <!-- upcoming matches-->
+    <f7-block-title class="header">Upcoming matches</f7-block-title>
     <f7-block strong class="matches">
       <match-card
         v-for="match in upcomingMatches"
@@ -51,7 +51,6 @@ export default {
       upcomingMatches: this.$f7route.context.upcomingMatches,
       playerNames: this.$f7route.context.playerNames,
       teams: [],
-      isSignedIn: false,
       auth: firebase.auth()
     };
   },
@@ -72,26 +71,6 @@ export default {
   },
   mounted() {
     this.$f7ready(f7 => {
-      this.isSignedIn = f7.isSignedIn;
-      this.auth.onAuthStateChanged(user => {
-        if (user) {
-          // User is signed in.
-          this.isSignedIn = true;
-          f7.isSignedIn = true;
-
-          if (!user.displayName) {
-            const randomName = this.playerNames[
-              Math.floor(Math.random() * this.playerNames.length)
-            ];
-            user.updateProfile({ displayName: randomName });
-          }
-        } else {
-          // User is signed out.
-          // ...
-          this.isSignedIn = false;
-          f7.isSignedIn = false;
-        }
-      });
     });
   },
   methods: {
@@ -103,17 +82,22 @@ export default {
     logout() {
       if (this.isSignedIn) {
         this.auth.signOut();
-        this.isSignedIn = false;
       }
     }
   }
 };
 </script>
 <style>
-.matches {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-evenly;
-  background-color: #efeff4;
+.logo {
+  border: 2px double green;
+  border-radius: 50%;
+  background-color: greenyellow;
+  color: white;
+  display: inline-block;
+  padding: 10px 5px;
+  font-size: 20px;
+  text-shadow: 1px 2px green;
+  font-family: fantasy;
+  font-weight: 800;
 }
 </style>

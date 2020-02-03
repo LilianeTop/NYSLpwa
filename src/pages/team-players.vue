@@ -1,13 +1,9 @@
 <template>
-  <f7-page name="team-players">
+  <f7-page bg-color="teal" name="team-players">
     <f7-navbar title="Players" back-link="Back"></f7-navbar>
     <f7-block class="team-list">
-      <player-card
-        v-for="team in teams"
-        :key="team.key"
-        :team="team"
-        :loading="loading"
-      />
+      <!-- all the players from team -->
+      <player-card v-for="team in teams" :key="team.key" :team="team" :loading="loading" />
     </f7-block>
   </f7-page>
 </template>
@@ -31,42 +27,46 @@ export default {
   created: async function() {
     const teamId = this.$f7route.params.teamId;
     const db = firebase.database();
-    const teamRef = db.ref("/teams/");
 
     this.loading = true;
 
+    // get a single team from firebase based on teamId
     if (teamId) {
-      await teamRef
+      await db
+        .ref("/teams/")
         .orderByKey()
         .equalTo(teamId)
         .once("value")
-        .then(snapshot => {
-          snapshot.forEach(team => {
-            const teamValue = team.val();
-            console.log("team", teamValue);
-            this.teams.push(teamValue);
+        .then(teamsSnapshot => {
+          teamsSnapshot.forEach(teamSnapshot => {
+            const team = teamSnapshot.val();
+            this.teams.push(team);
           });
         });
-      // console.log(team);
     } else {
-      await teamRef.once("value").then(snapshot => {
-        snapshot.forEach(snapshot => {
-          const team = snapshot.val();
-          this.teams.push(team);
+      // get all teams from firebase
+      await db
+        .ref("/teams/")
+        .once("value")
+        .then(teamsSnapshot => {
+          teamsSnapshot.forEach(teamSnapshot => {
+            const team = teamSnapshot.val();
+            this.teams.push(team);
+          });
         });
-      });
     }
-    // join players with team
+    // get all players from firebase
     await db
       .ref("/players/")
       .once("value")
-      .then(snapshot => {
-        snapshot.forEach(snapshot => {
-          const player = snapshot.val();
+      .then(playersSnapshot => {
+        playersSnapshot.forEach(playerSnapshot => {
+          const player = playerSnapshot.val();
           this.players.push(player);
         });
       });
 
+    // join players with team, bug adds non-player-object to team
     this.teams.forEach(team => {
       for (let playerKey in team) {
         this.players.forEach(player => {
@@ -76,7 +76,6 @@ export default {
         });
       }
     });
-
     this.loading = false;
   }
 };
@@ -85,6 +84,6 @@ export default {
 .team-list {
   display: flex;
   justify-content: space-evenly;
-  flex-wrap: wrap
+  flex-wrap: wrap;
 }
 </style>

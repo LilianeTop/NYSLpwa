@@ -17,13 +17,33 @@ import "../css/app.css";
 // Import App Component
 import App from "../components/app.vue";
 
+const firebase = require("./firebase");
+
+
 // Init Framework7-Vue Plugin
 Framework7.use(Framework7Vue);
 
 //Mixin for team color
 Vue.mixin({
+  data: function(){
+    return{
+      isSignedIn: false
+    }
+  },
+  created: function() {
+    firebase.auth().onAuthStateChanged(user => {
+        if (user) {
+          // User is signed in.
+          this.isSignedIn = true;
+          this.$f7.loginScreen.close();
+        } else {
+          // User is signed out.
+          this.isSignedIn = false;
+        }
+      });
+  },
   methods: {
-    teamColor: function(teamName) {
+    teamColor: function (teamName) {
       switch (teamName) {
         case "U1":
           return "team-U1-bg";
