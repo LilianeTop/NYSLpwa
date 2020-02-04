@@ -58,39 +58,14 @@ export default {
   components: {
     matchCard
   },
-  created: async function() {
-    var connectedRef = firebase.database().ref(".info/connected");
-    connectedRef.on("value", snapshot => {
-      if (snapshot.val() === true) {
+  watch: {
+    // ?offline
+    // aware of bug that it keeps populating upcoming matches with same data
+    isConnected: function() {
+      if (this.isConnected) {
         this.getData();
-      } else {
-        return;
       }
-    });
-  },
-  mounted() {
-    this.$f7ready(f7 => {
-      this.isSignedIn = f7.isSignedIn;
-      this.auth.onAuthStateChanged(user => {
-        if (user) {
-          // User is signed in.
-          this.isSignedIn = true;
-          f7.isSignedIn = true;
-
-          if (!user.displayName) {
-            const randomName = this.playerNames[
-              Math.floor(Math.random() * this.playerNames.length)
-            ];
-            user.updateProfile({ displayName: randomName });
-          }
-        } else {
-          // User is signed out.
-          // ...
-          this.isSignedIn = false;
-          f7.isSignedIn = false;
-        }
-      });
-    });
+    }
   },
   methods: {
     getMatchTeam: function(teamKey) {
@@ -104,6 +79,7 @@ export default {
         this.isSignedIn = false;
       }
     },
+    // ?offline
     getData: async function() {
       const db = firebase.database();
 

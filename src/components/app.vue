@@ -4,69 +4,42 @@
     <f7-panel left swipe :swipeActiveArea="100" cover class="bg-color-green">
       <f7-view @team-color="teamColor">
         <f7-page>
+          <!-- navigation -->
           <f7-navbar title="Menu"></f7-navbar>
           <f7-list class="m-0">
-            <f7-list-item link="#" title="Home">
+            <f7-list-item link="/home/" view="#main" panel-close title="Home">
               <f7-icon slot="media" material="home"></f7-icon>
             </f7-list-item>
-            <f7-list-item
-              link="/game-schedule/"
-              view="#main"
-              panel-close
-              title="Game Schedule"
-            >
+            <f7-list-item link="/game-schedule/" view="#main" panel-close title="Game Schedule">
               <f7-icon slot="media" material="schedule"></f7-icon>
             </f7-list-item>
             <f7-list-item link="/teams/" view="#main" panel-close title="Teams">
               <f7-icon slot="media" material="group"></f7-icon>
             </f7-list-item>
-            <f7-list-item
-              link="/players/"
-              view="#main"
-              panel-close
-              title="Players"
-            >
+            <f7-list-item link="/players/" view="#main" panel-close title="Players">
               <f7-icon slot="media" material="person"></f7-icon>
             </f7-list-item>
-            <f7-list-item
-              v-if="isSignedIn"
-              link="/chat/"
-              view="#main"
-              panel-close
-              title="Chat"
-            >
+            <f7-list-item v-if="isSignedIn" link="/chat/" view="#main" panel-close title="Chat">
               <f7-icon slot="media" material="chat"></f7-icon>
-            </f7-list-item>
-            <f7-list-item
-              link="/contact/"
-              view="#main"
-              panel-close
-              title="Contact"
-            >
-              <f7-icon slot="media" material="phone"></f7-icon>
             </f7-list-item>
           </f7-list>
         </f7-page>
       </f7-view>
     </f7-panel>
 
-    <!-- Right panel with reveal effect-->
-    <f7-panel right reveal theme-dark>
-      <f7-view>
-        <f7-page>
-          <f7-navbar title="Right Panel"></f7-navbar>
-          <f7-block>Right panel content goes here</f7-block>
-        </f7-page>
-      </f7-view>
-    </f7-panel>
-
     <!-- Your main view, should have "view-main" class -->
     <f7-view main class="safe-areas" url="/"></f7-view>
-
+    <!-- log in screen -->
     <f7-login-screen id="login-screen">
       <f7-view>
         <f7-page login-screen>
-          <f7-login-screen-title>Login</f7-login-screen-title>
+          <f7-toolbar><div class="left"></div>
+            <div class="right">
+              <!-- close login -->
+              <f7-link login-screen-close>X</f7-link>
+            </div>
+          </f7-toolbar>
+          <f7-login-screen-title>Log-in</f7-login-screen-title>
           <f7-list form>
             <f7-list-input
               type="text"
@@ -85,10 +58,6 @@
           </f7-list>
           <f7-list>
             <f7-list-button title="Sign In" @click="login"></f7-list-button>
-            <f7-block-footer>
-              Some text about login information.
-              <br />Click "Sign In" to close Login Screen
-            </f7-block-footer>
           </f7-list>
         </f7-page>
       </f7-view>
@@ -107,7 +76,6 @@ export default {
       f7params: {
         name: "NYSL", // App name
         theme: "auto", // Automatic theme detection
-        isSignedIn: false,
 
         // App routes
         routes: routes,
@@ -120,11 +88,11 @@ export default {
       // Login screen data
       username: "",
       password: "",
-      isSignedIn: false
     };
   },
   methods: {
     login() {
+      console.log(this.isSignedIn)
       if (!this.isSignedIn) {
         auth
           .signInWithEmailAndPassword(this.username, this.password)
@@ -135,26 +103,11 @@ export default {
             this.$f7.dialog.alert(errorMessage, () => {});
           });
       }
-      // console.log(this.username + " " + this.password);
     }
   },
   mounted() {
     this.$f7ready(f7 => {
       // Call F7 APIs here
-      auth.onAuthStateChanged(user => {
-        if (user) {
-          // User is signed in.
-          this.isSignedIn = true;
-          f7.isSignedIn = true;
-          this.$f7.loginScreen.close();
-          // console.log(user);
-        } else {
-          // User is signed out.
-          // ...
-          this.isSignedIn = false;
-          f7.isSignedIn = false;
-        }
-      });
     });
   }
 };
@@ -178,9 +131,22 @@ export default {
 .team-U6-bg {
   background-color: rgb(140, 133, 208);
 }
+.header {
+  font-size: 24px;
+  padding-bottom: 5px;
+  text-align: center;
+  color: white;
+}
+.matches {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+  background-color: #9cd6ad;
+}
+
 </style>
 <style scoped>
-.m-0{
+.m-0 {
   margin: 0;
 }
 </style>
